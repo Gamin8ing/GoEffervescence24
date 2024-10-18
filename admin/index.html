@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .admin-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .admin-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .submit-btn {
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-container">
+        <h1>Admin Panel</h1>
+        <form class="admin-form" id="adminForm">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('adminForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            // Get form data
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+
+            // Payload to send to FCM
+            const payload = {
+                message: {
+                    topic: "all",
+                    notification: {
+                        title: title,
+                        body: description
+                    },
+                    data: {
+                        key1: "value1", // You can replace these key-value pairs
+                        key2: "value2"
+                    }
+                }
+            };
+
+            // FCM endpoint
+            const url = 'https://fcm.googleapis.com/v1/projects/first-e6681/messages:send';
+
+            // Your Authorization Bearer token
+            const token = 'ya29.c.c0ASRK0GakcZMrjkWQRGT6opbU92Bn0aId5DMeyY1TufAXXs8XxKtqzri50pz_3URflZIDmmlY9dKF9QBXH4iPJzq0VqaFFFhVy6VPbjlWgjgKY6XsZJN5UBPcibxJBOZq78pAMLfLtbURDnQpb8jct6WdGHmUxszRR39ebeM6RkerZ3tSE_AmSxrWisgdqfbubqIME18eiTSkvhmhOtuWZDnwvxKJww8Mn2Y_y1wjztJDymZin7l5DmMsEP3pio38ni9qt4LAdfMUTJetqFAo6XI-R9A2uzLPdj5sdzfBGshPVUu9HXt6XYpi426BDBFmuFd1h143advw6FRIOs0YRK2UAQK36V8cZzb4DkFjZjg5KyZ9aM2jOn3mN385PpWxIpqXUxdYiqIIsfuJoFvIIl2acOZ5nkykYzqBUOz8zr7WwUpim8qU7isn0_3ftrn_FuyViSIzfaXaoM5_dXYJRervOpiVSibllhrM1z965ru1n4u_5mo97pvuXFw1xcg8aib8mO7sjFWoB--RqrtkU31bstl7ItMkYdSF9n9aBW8zwhsIh4gbXovy4jt_Xt1bRcdOcIb6ye05J6mSl9dxSca1_iktQIu4-3M2Y2ZBs0tj15erzvBgl41lIBpn3bn93dqZU1nek_1zbsbSUB4SuhJ3hlVJ0rxj2bZMk-mt2si47V7yhXjf13isM6fpWwyFOjrWkVsSg1R7eqgaZrvXhhMM7b0746agZ15iis4OuSMe5BBgirblWvnxXImIfwu9tW0oz9h_lWhRkhUQZQZYSuqakem_p4S6gVXyRr0YdUzQFiQf5sfi_h4eOx3ra4o0wQw0OBirWhMcB15QnJrSXIjkXqfwa_X8Zen9ciZX9kuUmagah4aVxJ6BOnf_cQlimeklcd4MBWwO9yf2xnFMYwXg3g-M22gQh_Yj0j2dXI1X6gJ1d7FQ4w2qYS1tgR5SZfvrWQjzUzB4FatFI6ZZ99XWO3dazuV8oR8bOuwtitzjlxxpU6dnFdi';
+
+            // Send POST request
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Message sent successfully!');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to send message');
+            });
+        });
+    </script>
+</body>
+
+</html>
